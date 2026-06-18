@@ -1,0 +1,27 @@
+name: Auto Deploy to Pages
+
+on:
+  push:
+    branches: ["main"] # Change this to "master" if your default branch is master
+  workflow_dispatch:
+
+# Requires write permission to write/push to the gh-pages branch
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to gh-pages Branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: '.' # Deploys the root folder. Change to './dist' or './build' if using a build step.
